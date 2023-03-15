@@ -3,16 +3,26 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table(name: '`products`')]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource]
+#[ApiResource(
+    uriTemplate: '/orders/{orderId}/products',
+    uriVariables: [
+        'orderId' => new Link(fromClass: Order::class, toProperty: 'orders')
+    ],
+    operations: [ new GetCollection(order: ['name' => 'ASC']) ]
+)]
 class Product
 {
     #[ORM\Id]
@@ -21,9 +31,13 @@ class Product
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 14, scale: 2)]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    #[Assert\DivisibleBy(0.01)]
     private ?string $price = null;
 
     #[ORM\Column(name: 'created_at')]
@@ -59,7 +73,7 @@ class Product
 
     public function getPrice(): ?string
     {
-        return $this->price;
+        return sprintf('%01.2f', $this->price);
     }
 
     public function setPrice(string $price): self

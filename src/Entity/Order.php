@@ -3,15 +3,25 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`orders`')]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource]
+#[ApiResource(
+    uriTemplate: '/products/{productId}/orders',
+    uriVariables: [
+        'productId' => new Link(fromClass: Product::class, toProperty: 'products')
+    ],
+    operations: [ new GetCollection() ],
+)]
 class Order
 {
     #[ORM\Id]
@@ -20,6 +30,7 @@ class Order
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?int $amount = null;
 
     #[ORM\Column(name: 'created_at')]
@@ -29,6 +40,7 @@ class Order
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'orders')]
+    #[Assert\NotBlank]
     private Collection $products;
 
     public function __construct()

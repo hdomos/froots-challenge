@@ -30,6 +30,16 @@
         "symfony/validator": "6.2.*",
         "symfony/yaml": "6.2.*"
     },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "fakerphp/faker": "^1.21",
+        "phpunit/phpunit": "^10.0",
+        "symfony/browser-kit": "6.2.*",
+        "symfony/css-selector": "6.2.*",
+        "symfony/http-client": "6.2.*",
+        "symfony/maker-bundle": "^1.48",
+        "symfony/phpunit-bridge": "^6.2"
+    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
@@ -78,10 +88,5 @@
             "require": "6.2.*",
             "docker": true
         }
-    },
-    "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "fakerphp/faker": "^1.21",
-        "symfony/maker-bundle": "^1.48"
     }
 }
