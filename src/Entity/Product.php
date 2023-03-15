@@ -107,6 +107,11 @@ class Product
         return $this;
     }
 
+    public function getProductUrl(): string
+    {
+        return '/products/' . $this->getId();
+    }
+
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function setTimestamps()
